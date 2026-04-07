@@ -1,15 +1,20 @@
+from collections import deque
+
+
 class Queue:
     def __init__(self):
-        self.items = []
+        self.items = deque()
 
     def enqueue(self, item):
         self.items.append(item)
 
     def dequeue(self):
-        return self.items.pop(0)
+        if not self.is_empty():
+            return self.items.popleft()
 
     def peek(self):
-        return self.items[0]
+        if not self.is_empty():
+            return self.items[0]
 
     def is_empty(self):
         return len(self.items) == 0
@@ -17,18 +22,19 @@ class Queue:
 
 class MyStack:
     def __init__(self):
-        self.queue = []
+        self.queue = Queue()
 
     def push(self, x: int) -> None:
-        self.queue.append(x)
-        for _ in range(len(self.queue) - 1):
-            self.queue.append(self.queue.pop(0))
+        self.queue.enqueue(x)
+        size = len(self.queue.items)
+        for _ in range(size - 1):
+            self.queue.enqueue(self.queue.dequeue())
 
     def pop(self) -> int:
-        return self.queue.pop(0)
+        return self.queue.dequeue()
 
     def top(self) -> int:
-        return self.queue[0]
+        return self.queue.peek()
 
     def empty(self) -> bool:
-        return len(self.queue) == 0
+        return self.queue.is_empty()
